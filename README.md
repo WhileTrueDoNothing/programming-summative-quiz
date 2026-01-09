@@ -38,7 +38,7 @@ You need to run main.py to play the game. Its overall structure is a simple sequ
 |`play_again`|bool|Initialized as True, can be set to False if the user doesn't want to play again at the end of a quiz. This will end the while loop.|
 |`SEPARATOR_STRING`|str|A constant string used for separating different sections of quiz in the command line, to make the program look neater and easier to follow.|
 |`question_file`|str|Stores the name of the file to retrieve question data from.|
-|`question_texts`|list[tuple[str,str]|A list of tuples with question details to be used for `gen_questions_csv`. The first value in each tuple is the text for the question, with the column to get values from in curly brackets. The second value is the name of the column the answer will be in.|
+|`question_texts`|list[tuple[str,str]]|A list of tuples with question details to be used for `gen_questions_csv`. The first value in each tuple is the text for the question, with the column to get values from in curly brackets. The second value is the name of the column the answer will be in.|
 |`selected_difficulty`|str|Initialized as an empty string, but will be changed to the user's difficulty selection when they input one. It's reset to an empty string if the user doesn't input a valid option.|
 |`question_list`|list[Question]|Initialized as an empty list, then populated with Question objects after the user selects a difficulty. It's then used for `run_quiz`.|
 |`replay_input`|str|Stores the user's input for whether they want to play again or not.|
