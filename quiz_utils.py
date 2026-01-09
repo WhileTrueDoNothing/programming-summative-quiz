@@ -269,7 +269,7 @@ def gen_questions_csv(
                     raise ValueError("Not enough unused data to generate question!")
 
                 # get random incorrect options
-                options_to_add = q_df[~q_df["row_used"] & ~q_df[a_col].isin(q_answers)].sample(options_needed)
+                options_to_add = q_df[~q_df["row_used"] & ~q_df[a_col].isin(q_answers) & ~q_df[a_col].isin(q_incorrect)].sample(options_needed)
                 options_to_add.drop_duplicates(subset=a_col)
 
                 q_incorrect.extend(options_to_add[a_col].to_list())
