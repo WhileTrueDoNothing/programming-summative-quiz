@@ -18,7 +18,7 @@ However, most of these were designed for the command line, and needed to be brok
 
 [insert some stuff here about breaking down functions and adding the user class once I do that]
 
-[MAKE FLOWCHARTS FOR SOME COMPLICATED FUNCTIONS]
+[MAKE FLOWCHARTS FOR SOME KEY FUNCTIONS]
 ## Development
 
 
