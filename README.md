@@ -21,3 +21,6 @@ However, most of these were designed for the command line, and needed to be brok
 ## Testing
 
 ## Evaluation
+### Future plans
+[insert some stuff about user testing]
+[add some stuff about a difficulty increase if I didn't add that]
