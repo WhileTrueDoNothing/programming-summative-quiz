@@ -13,16 +13,21 @@ The application must:
 - Generate questions randomly from the postcode data.
 - Save and store user scores so they can be accessed later.
 - Validate user name inputs to ensure they don't contain numbers or symbols.
-- Be able to end the quiz if all rows in the data have been used.
+- Either end the quiz or reset the data if all question data has been used.
 ## Should
 The application should:
 - Display the leaderboard as a graph.
--  Contain a widget explaining how to play the game.
--  Use a contrasting colour palette tested with a colour blindness simulator.
+- Contain a widget explaining how to play the game.
+- Use a contrasting colour palette tested with a colour blindness simulator.
 ## Could
-
+The application could:
+- Become more difficult once the user scores enough points by offering a selection menu of all options instead of just 4.
+- Become even more difficult for high scoring users by switching to just a free text input.
 ## Won't
-
+(This version of the application) Won't:
+- Utilize postcode district data for questions. That dataset is too large and complex to be worth implementing at this stage.
+- Differentiate between users with the same score by other metrics. Choosing and implementing an alternative metric takes time, and I have higher priority tasks.
+- Score users based on the time they take to answer (to deter them from googling it). The time it could take to implement the system and find ideal time limits outweighs the value it could bring.
 ### Prototype
 I used figma to create a prototype of the user's journey through the quiz. It demonstrates viewing instructions on how to play, entering a user's name, answering a question and the quiz leaderboard updating with their final score. It can be accessed [here](https://www.figma.com/design/uioibs1bjv756tDAnCv9xo/postcode_quiz_ui_prototype?node-id=0-1&t=zjcT6pKWqf88Nzvt-1).
 <img width="1186" height="1077" alt="The Figma UI prototype for the quiz, showing the flow between different screens." src="https://github.com/user-attachments/assets/6b433fee-1b68-4114-8511-8fa7dbb06c68" />
