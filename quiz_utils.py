@@ -11,34 +11,41 @@ import string                           # for handling custom question strings
 class Question:
     """A question that can be answered by a free text input."""
 
-    question: str
-    answers: list[str]
+    q_text: str
+    answer: str
+    a_col: str
 
-    def __init__(self, question, answers):
+    def __init__(self, q_text, answer, a_col):
         """
         Create a new Question.
 
         Args:
-            question (str): The text for the question to be asked.
-            answers (list[str]): The correct answer(s) for the question.
+            q_text (str): The text for the question to be asked.
+            answer (str): The correct answer for the question.
+            a_col (str): The column in the data the answer is from (for generating options to select from).
         """
-        self.question = question
-        self.answers = answers
+        self.q_text = q_text
+        self.answer = answer
+        self.a_col = a_col
 
-    def ask(self):
+    def get_q_text(self):
+        return self.q_text
+    
+    def get_answer(self):
+        return self.answer
+    
+    def get_a_col(self):
+        return self.a_col
+    
+    def check_answer(self, a_to_check: str):
         """
-        Asks the user the question. Returns 1 if the user inputs the correct answer, or 0 otherwise.
+        Checks a given input against the Question's answer. Returns True if they're equal, False otherwise.
         """
 
-        print(self.question)
-        user_answer = input("Your answer: ")
-
-        if user_answer.lower() in [answer.lower() for answer in self.answers]:
-            print("Correct!")
-            return 1
+        if a_to_check.lower() == self.answer:
+            return True
         else:
-            print("Incorrect! The answer was {}".format(self.answers[0]))
-            return 0
+            return False
 
 
 class MultiChoiceQuestion(Question):
