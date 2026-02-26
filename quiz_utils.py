@@ -42,7 +42,7 @@ class Question:
         Checks a given input against the Question's answer. Returns True if they're equal, False otherwise.
         """
 
-        if a_to_check.lower() == self.answer:
+        if a_to_check.lower() == self.answer.lower():
             return True
         else:
             return False
