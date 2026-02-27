@@ -49,9 +49,21 @@ However, most of these were designed for the command line, and needed to be brok
 
 [MAKE FLOWCHARTS FOR SOME KEY FUNCTIONS]
 ## Development
+### quiz_utils module
+I began development with the quiz_utils module, as a lot of the code could be reconstructed from the quiz's command line version. I first constructed a basic class diagram to plan my classes and their functions, with plans to amend it during development, should I need to.
+<img width="796" height="518" alt="A draw.io diagram with details on the User, LeaderboardManager, Question and QuestionGenerator classes." src="https://github.com/user-attachments/assets/910f75be-7cdb-4e17-8a35-fda432d2c097" />
+#### Question
+I developed Question first. Classes like QuestionGenerator relied on it's existence, and the specifics of many other app elements depended on the way I decided to implement it.
+<img width="1294" height="653" alt="image" src="https://github.com/user-attachments/assets/8f45cb1f-6018-4869-838e-45c3a08ab90c" /><img width="1306" height="545" alt="image" src="https://github.com/user-attachments/assets/415ca9e6-da9a-4c2f-b597-cf7eb7aee785" /><img width="1481" height="254" alt="image" src="https://github.com/user-attachments/assets/d644ea67-a82a-4ebd-a01f-09b6e0d09621" />
+Alongside the question's text and correct answers, I decided to store the name of the column used for the answer. This allows the QuestionGenerator to generate incorrect multiple choice answers without needing to store them in the class itself. If I later utilize a selectbox widget with all potential answer options, it'll allow for easy retrieval of the correct column from the QuestionGenerator's DataFrame.
 
+I added allow_multiple_correct slightly later, upon realising the QuestionGenerator needed to know all potential answers to the given question, even if only one were to be displayed. If a single value was stored, other correct values could be selected as "incorrect" options. With allow_multiple_correct set to False, the Question will store all potential answers to avoid this, while only outputting the first answer if a single one is needed.
+### streamlit frontend
 
 ## Testing
+### Unit Tests
+I used pytest to ensure my classes and functions worked as expected. I chose pytest over unittest due to it's easy Github integration and the lack of boilerplate code required when creating tests. I used a separate file for each class to keep my tests organized.
+####
 
 ## Evaluation
 ### Future plans
