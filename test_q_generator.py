@@ -24,7 +24,7 @@ def ez_maths_q_generator(ez_maths_df):
     return QuestionGenerator(
         q_details=(
             ("What is {problem}?", "solution"),
-            ("What would you calculate to get {solution}?", "problem"),
+            ("What would you calculate to get {solution}?", "problem")
         ),
         q_data=ez_maths_df,
     )
@@ -35,5 +35,5 @@ def test_q_generator_data_cols(ez_maths_q_generator):
     assert ez_maths_cols == ["problem", "solution", "row_used"]
 
 
-def test_get_cols_from_q_text(ez_maths_q_generator):
-    assert ez_maths_q_generator.get_cols_from_q_text(ez_maths_q_generator.q_details[0][0]) == ["problem"]
+def test_get_colnames_from_text(ez_maths_q_generator):
+    assert ez_maths_q_generator.get_colnames_from_text(ez_maths_q_generator.get_q_details()[0][0]) == ["problem"]

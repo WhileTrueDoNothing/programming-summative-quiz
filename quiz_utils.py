@@ -83,7 +83,7 @@ class QuestionGenerator:
             q_data_source_path (str, optional*): The path to a CSV file to generate question data from. Must be supplied if q_data is None. Defaults to None.
         """
 
-        self.q_texts = q_details
+        self.q_details = q_details
 
         if q_data is not None:
             self.q_data = q_data
@@ -104,7 +104,7 @@ class QuestionGenerator:
         """Returns the QuestionGenerator's q_data DataFrame."""
         return self.q_data
     
-    def get_colnames_from_text(text: str):
+    def get_colnames_from_text(self, text: str):
         """Extracts column names from {curly brackets} in a string and returns them as a list."""
         return [
         span[1]
