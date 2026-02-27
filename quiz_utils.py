@@ -112,6 +112,10 @@ class QuestionGenerator:
         if span[1] is not None
     ]
 
+    def mark_row_as_used(self, row_id: int):
+        """Sets the value of row_used for a given row_id to True."""
+        self.q_data.loc[row_id, "row_used"] = True
+
 
 class MultiChoiceQuestion(Question):
     """A multiple choice question. Supports up to 26 options."""
