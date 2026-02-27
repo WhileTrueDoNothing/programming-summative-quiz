@@ -30,8 +30,8 @@ DL,Darlington
 DN,Doncaster
 DT,Dorchester
 DY,Dudley
-E,East London
-EC,East Central London
+E,London
+EC,London
 EH,Edinburgh
 EN,Enfield
 EX,Exeter
@@ -76,7 +76,7 @@ NG,Nottingham
 NN,Northampton
 NP,Newport
 NR,Norwich
-NW,North West London
+NW,London
 OL,Oldham
 OX,Oxford
 PA,Paisley
@@ -91,7 +91,7 @@ RH,Redhill
 RM,Romford
 S,Sheffield
 SA,Swansea
-SE,South East London
+SE,London
 SG,Stevenage
 SK,Stockport
 SL,Slough
@@ -102,7 +102,7 @@ SP,Salisbury
 SR,Sunderland
 SS,Southend
 ST,Stoke on Trent
-SW,South West London
+SW,London
 SY,Shrewsbury
 TA,Taunton
 TD,Galashiels
@@ -115,7 +115,7 @@ TW,Twickenham
 UB,Southall
 W,West London
 WA,Warrington
-WC,West Central London
+WC,London
 WD,Watford
 WF,Wakefield
 WN,Wigan
