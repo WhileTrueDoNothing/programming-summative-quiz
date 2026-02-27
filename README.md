@@ -19,6 +19,7 @@ The application should:
 - Display the leaderboard as a graph.
 - Contain a widget explaining how to play the game.
 - Use a contrasting colour palette tested with a colour blindness simulator.
+- Ensure that questions don't accidentally provide a correct answer as an incorrect option. (for example, if both SW and EC were labelled London, if SW was the intended answer then EC should either not be a selectable option or accepted as correct.)
 ## Could
 The application could:
 - Become more difficult once the user scores enough points by offering a selection menu of all options instead of just 4.
