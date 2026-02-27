@@ -1,51 +1,116 @@
 """Tools for creating questions and quizzes."""
 
-from random import shuffle              # for shuffling multiple choice options
-from random import randint              # for selecting random items from a list
-from string import ascii_lowercase      # for generating the index for multiple choice options
-import pandas as pd                     # for importing and managing question data
-import numpy as np                      # for condensing filter conditions
-import string                           # for handling custom question strings
+from random import shuffle  # for shuffling multiple choice options
+from random import randint  # for selecting random items from a list
+from string import (
+    ascii_lowercase,
+)  # for generating the index for multiple choice options
+import pandas as pd  # for importing and managing question data
+import numpy as np  # for condensing filter conditions
+import string  # for handling custom question strings
 
 
 class Question:
     """A question that can be answered by a free text input."""
 
     q_text: str
-    answer: str
+    answers: list[str]
     a_col: str
+    allow_multiple_correct: bool
 
-    def __init__(self, q_text, answer, a_col):
+    def __init__(self, q_text: str, answers: list[str], a_col: str, allow_multiple_correct: bool = False):
         """
         Create a new Question.
 
         Args:
             q_text (str): The text for the question to be asked.
-            answer (str): The correct answer for the question.
+            answers (list[str]): The correct answer(s) for the question.
             a_col (str): The column in the data the answer is from (for generating options to select from).
+            allow_multiple_correct (bool, optional): Whether to display multiple correct answers.
         """
         self.q_text = q_text
-        self.answer = answer
+        self.answers = answers
         self.a_col = a_col
+        self.allow_multiple_correct = allow_multiple_correct
 
     def get_q_text(self):
+        """Returns the question's text."""
         return self.q_text
-    
-    def get_answer(self):
-        return self.answer
-    
-    def get_a_col(self):
-        return self.a_col
-    
-    def check_answer(self, a_to_check: str):
-        """
-        Checks a given input against the Question's answer. Returns True if they're equal, False otherwise.
-        """
 
-        if a_to_check.lower() == self.answer.lower():
+    def get_all_answers(self):
+        """Returns the list of all the Question's answers, no matter the value of allow_multiple_correct."""
+        return self.answers
+
+    def get_valid_answers(self):
+        """Returns the full list of answers if allow_multiple_correct is true, returns only the first otherwise."""
+        if self.allow_multiple_correct:
+            return self.answers
+        else:
+            return self.answers[:1]
+
+    def get_a_col(self):
+        """Returns the name of the column the Question's answers are from."""
+        return self.a_col
+
+    def check_answer(self, a_to_check: str):
+        """Checks a given input against a list of the Question's answer(s). Returns True if the input is present, False otherwise."""
+        valid_answers = self.get_valid_answers()
+
+        if a_to_check.lower() in [answer.lower() for answer in valid_answers]:
             return True
         else:
             return False
+
+
+class QuestionGenerator:
+    """A class that stores and generates questions from a Pandas DataFrame."""
+
+    q_details: tuple[tuple[str, str]]
+    q_data: pd.DataFrame
+
+    def __init__(
+        self,
+        q_details: tuple[tuple[str, str]],
+        q_data: pd.DataFrame = None,
+        q_data_source_path: str = None,
+    ):
+        """
+        Creates a new QuestionGenerator.
+
+        Args:
+            q_details (tuple[tuple[str,str]]): Question details. The first item in a pair should be a formattable string for the question text, with column names in {} where their value should be. Second value is the name of the column to get the answer from.
+            q_data (pandas.DataFrame, optional*): A DataFrame to generate questions from. Must be supplied if q_data_source_path is None. Defaults to None.
+            q_data_source_path (str, optional*): The path to a CSV file to generate question data from. Must be supplied if q_data is None. Defaults to None.
+        """
+
+        self.q_texts = q_details
+
+        if q_data is not None:
+            self.q_data = q_data
+        elif q_data_source_path is not None:
+            self.q_data = pd.read_csv(q_data_source_path, index_col=None)
+        else:
+            raise TypeError(
+                "No question data was provided. Please provide either a DataFrame or a filepath to a CSV file."
+            )
+
+        self.q_data["row_used"] = False
+
+    def get_q_details(self):
+        """Returns the QuestionGenerator's q_details tuple tuple."""
+        return self.q_details
+    
+    def get_q_data(self):
+        """Returns the QuestionGenerator's q_data DataFrame."""
+        return self.q_data
+    
+    def get_colnames_from_text(text: str):
+        """Extracts column names from {curly brackets} in a string and returns them as a list."""
+        return [
+        span[1]
+        for span in string.Formatter().parse(text)
+        if span[1] is not None
+    ]
 
 
 class MultiChoiceQuestion(Question):
@@ -124,7 +189,7 @@ class MultiChoiceQuestion(Question):
                     return 0
             else:
                 print("Please enter one of the options!")
-        
+
         # The function should exit during the while loop, this is here in case it does not
         print("How is this method still running?")
         return 0
@@ -161,7 +226,7 @@ def run_quiz(
         print(question_separator)
         print("Question {q_num}".format(q_num=i + first_question_num))
         print(question_separator)
-        score += (questions[i].ask() * score_per_question)
+        score += questions[i].ask() * score_per_question
 
     print(question_separator)
     print("Your score: {total}".format(total=score))
@@ -239,7 +304,6 @@ def gen_questions_csv(
         # pick random question type from the question details list
         selected_q = q_details[randint(0, len(q_details) - 1)]
 
-
         # get the column(s) used for the question
         q_cols = extract_placeholders(selected_q[0])
         a_col = selected_q[1]
@@ -277,7 +341,11 @@ def gen_questions_csv(
                     raise ValueError("Not enough unused data to generate question!")
 
                 # get random incorrect options
-                options_to_add = q_df[~q_df["row_used"] & ~q_df[a_col].isin(q_answers) & ~q_df[a_col].isin(q_incorrect)].sample(options_needed)
+                options_to_add = q_df[
+                    ~q_df["row_used"]
+                    & ~q_df[a_col].isin(q_answers)
+                    & ~q_df[a_col].isin(q_incorrect)
+                ].sample(options_needed)
                 options_to_add.drop_duplicates(subset=a_col)
 
                 q_incorrect.extend(options_to_add[a_col].to_list())
@@ -285,7 +353,9 @@ def gen_questions_csv(
                 # flag rows as used
                 q_df.loc[q_df.index.isin(options_to_add), "row_used"] = True
 
-                options_needed = multi_choice_options - len(q_answers) - len(q_incorrect)
+                options_needed = (
+                    multi_choice_options - len(q_answers) - len(q_incorrect)
+                )
 
             # save details as MultiChoiceQuestion object
             q_list.append(MultiChoiceQuestion(q_text, q_answers, q_incorrect))
