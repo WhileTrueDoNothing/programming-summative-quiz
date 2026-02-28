@@ -73,3 +73,11 @@ def test_gen_alt_options(ez_maths_q_generator, ez_maths_q):
 def test_gen_alt_options_error(ez_maths_q_generator, ez_maths_q):
     with pytest.raises(ValueError):
         ez_maths_q_generator.gen_alt_options(q_to_gen_for=ez_maths_q, total_q_optns=4)
+
+def test_reset_use_rows(ez_maths_q_generator):
+    for i in range(0,7):
+        ez_maths_q_generator.mark_row_as_used(i)
+    ez_maths_q_generator.reset_used_rows()
+    q_data = ez_maths_q_generator.get_q_data()
+    num_unused_rows = q_data.loc[q_data["row_used"], "row_used"].size
+    assert num_unused_rows == 0

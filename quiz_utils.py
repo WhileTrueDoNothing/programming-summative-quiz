@@ -203,7 +203,7 @@ class QuestionGenerator:
 
     def reset_used_rows(self):
         """Sets the row_used value for all rows in the q_data back to False."""
-        pass
+        self.q_data["row_used"] = False
 
 class User():
     pass
