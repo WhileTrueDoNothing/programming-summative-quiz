@@ -187,7 +187,19 @@ class QuestionGenerator:
         Returns:
             list[str]: A list of the alternative answer options generated.
         """
-        pass
+        
+        optns_needed = total_q_optns - len(q_to_gen_for.get_valid_answers())
+
+        potential_alt_optns = self.q_data[q_to_gen_for.get_a_col()].drop_duplicates()
+
+        potential_alt_optns = potential_alt_optns[~potential_alt_optns.isin(q_to_gen_for.get_all_answers())]
+
+        if len(potential_alt_optns) < optns_needed:
+            raise ValueError(f"{optns_needed} alternative options are needed, but only {len(potential_alt_optns)} are available.")
+        
+        alt_optns = potential_alt_optns.sample(optns_needed).to_list()
+
+        return alt_optns
 
     def reset_used_rows(self):
         """Sets the row_used value for all rows in the q_data back to False."""

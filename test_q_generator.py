@@ -66,5 +66,10 @@ def test_gen_multiple_random_q(ez_maths_q_generator):
     with pytest.raises(ValueError):
         ez_maths_q_generator.gen_random_q()
 
-# TODO: Remember when testing gen_alt_options that there should only be 2 valid ones (25 and 11)
-# trying to generate more should throw an error 
+def test_gen_alt_options(ez_maths_q_generator, ez_maths_q):
+    ez_alt_options = ez_maths_q_generator.gen_alt_options(q_to_gen_for=ez_maths_q, total_q_optns=3)
+    assert set(ez_alt_options) == {"25","11"}
+
+def test_gen_alt_options_error(ez_maths_q_generator, ez_maths_q):
+    with pytest.raises(ValueError):
+        ez_maths_q_generator.gen_alt_options(q_to_gen_for=ez_maths_q, total_q_optns=4)
