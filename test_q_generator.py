@@ -1,4 +1,5 @@
 from quiz_utils import QuestionGenerator
+from quiz_utils import Question
 import pytest
 import pandas as pd
 
@@ -52,6 +53,18 @@ def test_q_from_row(ez_maths_q):
     assert ez_maths_q.get_q_text() == "What is the square root of 144?"
     assert ez_maths_q.check_answer("12")
     assert not ez_maths_q.check_answer("-12")
+
+def test_random_q_gen(ez_maths_q_generator):
+    random_q = ez_maths_q_generator.gen_random_q()
+    assert isinstance(random_q, Question)
+    assert random_q.check_answer(random_q.get_valid_answers()[0])
+
+def test_gen_multiple_random_q(ez_maths_q_generator):
+    q_list = []
+    for i in range(0,7):
+        q_list.append(ez_maths_q_generator.gen_random_q())
+    with pytest.raises(ValueError):
+        ez_maths_q_generator.gen_random_q()
 
 # TODO: Remember when testing gen_alt_options that there should only be 2 valid ones (25 and 11)
 # trying to generate more should throw an error 
