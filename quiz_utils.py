@@ -106,15 +106,41 @@ class QuestionGenerator:
     
     def get_colnames_from_text(self, text: str):
         """Extracts column names from {curly brackets} in a string and returns them as a list."""
-        return [
+        colname_list =  [
         span[1]
         for span in string.Formatter().parse(text)
         if span[1] is not None
-    ]
+        ]
+        return list(set(colname_list))
 
     def mark_row_as_used(self, row_id: int):
         """Sets the value of row_used for a given row_id to True."""
         self.q_data.loc[row_id, "row_used"] = True
+
+    def gen_q_from_row(self, row_id: int, q_details: tuple[str,str], allow_multiple_correct: bool = False):
+        """
+        Generates a Question from the specified row and details.
+
+        Arguments:
+            row_id (int): The index of the row to create a question from.
+            q_details (tuple[str,str]): The question text and answer column to be used for the question.
+            allow_multiple_correct (bool, optional): Whether to display multiple correct answers.
+        """
+        row_dict = self.q_data.loc[row_id].to_dict()
+
+        # extract q col names from the question text
+        q_cols = self.get_colnames_from_text(q_details[0])
+        # get q col values from the row dict
+        q_col_vals = {col: row_dict[col] for col in q_cols}
+        q_text = q_details[0].format(**q_col_vals)
+        # get initial answer col value from the answer col of the row
+        row_answer = row_dict[q_details[1]]
+        # find additional answers that have the same q col values and put together the list
+        all_answers = self.q_data.loc[(self.q_data[list(q_col_vals)] == pd.Series(q_col_vals)).all(axis=1), q_details[1]].drop_duplicates()
+        all_answers = all_answers.loc[lambda x : x != row_answer].to_list()
+        all_answers.insert(0,row_answer)
+        # create the question object
+        return Question(q_text=q_text, answers=all_answers, a_col=q_details[1], allow_multiple_correct=allow_multiple_correct)
 
 
 class MultiChoiceQuestion(Question):
