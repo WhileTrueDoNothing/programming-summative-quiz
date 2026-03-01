@@ -52,7 +52,10 @@ class Question:
         return self.a_col
 
     def check_answer(self, a_to_check: str):
-        """Checks a given input against a list of the Question's answer(s). Returns True if the input is present, False otherwise."""
+        """
+        Checks a given input against a list of the Question's answer(s). 
+        Returns True if the input is present, False otherwise.
+        """
         valid_answers = self.get_valid_answers()
 
         if a_to_check.lower() in [answer.lower() for answer in valid_answers]:
@@ -62,7 +65,7 @@ class Question:
 
 
 class QuestionGenerator:
-    """A class that stores and generates questions from a Pandas DataFrame."""
+    """Manages a pandas DataFrame and uses it to generate Question objects."""
 
     q_details: tuple[tuple[str, str]]
     q_data: pd.DataFrame
@@ -77,9 +80,13 @@ class QuestionGenerator:
         Creates a new QuestionGenerator.
 
         Args:
-            q_details (tuple[tuple[str,str]]): Question details. The first item in a pair should be a formattable string for the question text, with column names in {} where their value should be. Second value is the name of the column to get the answer from.
-            q_data (pandas.DataFrame, optional*): A DataFrame to generate questions from. Must be supplied if q_data_source_path is None. Defaults to None.
-            q_data_source_path (str, optional*): The path to a CSV file to generate question data from. Must be supplied if q_data is None. Defaults to None.
+            q_details (tuple[tuple[str,str]]): Question details. The first item in the tuple should be a formattable 
+                string for the question text, with column names in {} where their value should be. Second value is 
+                the name of the column to get the answer from.
+            q_data (pandas.DataFrame, optional*): A DataFrame to generate questions from. Defaults to None.
+                Must be supplied if q_data_source_path is None.
+            q_data_source_path (str, optional*): The path to a CSV file containing question data. Defaults to None.
+                Must be supplied if q_data is None.
         """
 
         self.q_details = q_details
@@ -126,7 +133,8 @@ class QuestionGenerator:
             allow_multiple_correct (bool, optional): Whether to display multiple correct answers. Defaults to False.
 
         Returns:
-            Question: A Question object with the q_text, answers, a_col and allow_multiple_correct attributes determined by the inputs provided.
+            Question: A Question object with the q_text, answers, a_col and allow_multiple_correct attributes 
+            determined by the inputs provided.
         """
         row_dict = self.q_data.loc[row_id].to_dict()
 
@@ -206,9 +214,58 @@ class QuestionGenerator:
         self.q_data["row_used"] = False
 
 class User():
-    pass
+    """Keeps track of a user's name, current lives and total score."""
+    name: str
+    lives: int
+    score: int
+
+    def __init__(self, name: str, lives: int = 3, score: int = 0):
+        """
+        Creates a new User.
+
+        Args:
+            name (str): The user's name.
+            lives (int, optional): The number of lives the user should start with. Defaults to 3.
+                Cannot be initialized as 0 or less.
+            score (int, optional): The score the user should start with. Defaults to 0.
+        """
+        self.name = name
+        if lives <= 0:
+            raise ValueError("Lives cannot be initialized as 0 or less.")
+        self.lives = lives
+        self.score = score
+
+    def get_name(self):
+        """Returns the User's name."""
+        return self.name
+    
+    def get_lives(self):
+        """Returns the User's current number of lives."""
+        return self.lives
+    
+    def get_score(self):
+        """Returns the User's current score."""
+        return self.score
+    
+    def add_score(self, to_add: int = 1):
+        """Adds the given amount to the User's score. Adds 1 if no amount is given."""
+        self.score += to_add
+
+    def lose_lives(self, to_lose: int = 1):
+        """
+        Subtracts the given amount from the User's lives. Subtracts 1 if no amount is given.
+        Sets lives to 0 if they would go below that.
+        """
+        if self.lives - to_lose < 0:
+            self.lives = 0
+        else:
+            self.lives -= to_lose
+
 
 class LeaderboardManager():
+    pass
+
+class InputChecker():
     pass
 
 class MultiChoiceQuestion(Question):

@@ -39,7 +39,6 @@ def test_q_generator_data_cols(ez_maths_q_generator):
     ez_maths_cols = ez_maths_q_generator.get_q_data().columns.tolist()
     assert ez_maths_cols == ["problem", "solution", "row_used"]
 
-
 def test_get_colnames_from_text(ez_maths_q_generator):
     assert ez_maths_q_generator.get_colnames_from_text(ez_maths_q_generator.get_q_details()[0][0]) == ["problem"]
 
