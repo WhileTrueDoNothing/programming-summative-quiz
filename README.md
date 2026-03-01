@@ -91,6 +91,9 @@ The reset_used_rows method resets the "row_used" value to False for all rows of 
 ### Unit Tests
 I used pytest to ensure my classes and functions worked as expected. I chose pytest over unittest due to it's easy Github integration and the lack of boilerplate code required when creating tests. I used a separate file for each class to keep my tests organized.
 #### Question
+Question was a fairly simple class to test. I started with a smoke test to ensure things were working properly, then used two almost-identical fixtures to ensure the allow_multiple_correct attribute properly affected the answer checking.
+<img width="727" height="1021" alt="image" src="https://github.com/user-attachments/assets/1ab75f21-9203-420e-9a60-15ebe5265179" />
+
 
 #### QuestionGenerator
 Adding a direct DataFrame parameter for initializing QuestionGenerators let me run tests with a specially designed DataFrame fixture. By having duplicate values in both columns of ez_maths_df, I could ensure the QuestionGenerator could properly handle questions with multiple correct answers and vice versa.
@@ -100,9 +103,6 @@ Adding a direct DataFrame parameter for initializing QuestionGenerators let me r
 It also meant that gen_alt_options would always output the same "random" sample (as only 2 options were valid to select), letting me test against that.
 
 <img width="1174" height="453" alt="image" src="https://github.com/user-attachments/assets/d27b2692-605b-43ec-a7c1-75e3f9d6f88e" />
-
-
-#### QuestionGenerator
 
 ## Evaluation
 ### Future plans
