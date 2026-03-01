@@ -93,6 +93,7 @@ This class stores and manages details on the current user playing the quiz. My m
 ## Testing
 ### Unit Tests
 I used pytest to ensure my classes and functions worked as expected. I chose pytest over unittest due to it's easy Github integration and the lack of boilerplate code required when creating tests. I used a separate file for each class to keep my tests organized.
+
 #### Question
 Question was a fairly simple class to test. I started with a smoke test to ensure things were working properly, then used two almost-identical fixtures to ensure the allow_multiple_correct attribute properly affected the answer checking.
 
@@ -109,6 +110,7 @@ It also meant that gen_alt_options would always output the same "random" sample 
 
 #### User
 The tests for this class ensured its attributes were properly initialized and managed by its methods, whether values were provided or defaults were used.
+
 <img width="724" height="898" alt="image" src="https://github.com/user-attachments/assets/cf6167a9-cad9-4d45-bfc5-ee8f93c82799" />
 
 
