@@ -83,7 +83,10 @@ The gen_alt_options method relies on the Question's allow_multiple_correct attri
 The reset_used_rows method resets the "row_used" value to False for all rows of the question data. This could potentially be called to continue the quiz if a user answers a question for every item in the dataset.
 
 <img width="930" height="120" alt="image" src="https://github.com/user-attachments/assets/410d6d8e-0042-4092-9038-bbf1d22dd141" />
+#### User
+This class stores and manages details on the current user playing the quiz. My main concern when creating this class was preventing the user's lives from being set to less than zero, to avoid issues displaying lives in the interface. The constructor method throws a ValueError if the initial lives value is 0 or less, to avoid ending the quiz immediately. The User's lives can be set to 0 by the lose_lives method, and will be set to 0 if the subtracted value would be less than that.
 
+<img width="1147" height="626" alt="image" src="https://github.com/user-attachments/assets/4537e3b9-cacf-49d7-aff9-cab63e302774" /><img width="698" height="229" alt="image" src="https://github.com/user-attachments/assets/29dbc0ae-4b39-4329-ae13-36511f6342ad" /><img width="1070" height="411" alt="image" src="https://github.com/user-attachments/assets/ec0d7fc1-bcef-4e0c-8b2a-824f77048a78" />
 
 ### streamlit frontend
 
@@ -92,8 +95,8 @@ The reset_used_rows method resets the "row_used" value to False for all rows of 
 I used pytest to ensure my classes and functions worked as expected. I chose pytest over unittest due to it's easy Github integration and the lack of boilerplate code required when creating tests. I used a separate file for each class to keep my tests organized.
 #### Question
 Question was a fairly simple class to test. I started with a smoke test to ensure things were working properly, then used two almost-identical fixtures to ensure the allow_multiple_correct attribute properly affected the answer checking.
-<img width="727" height="1021" alt="image" src="https://github.com/user-attachments/assets/1ab75f21-9203-420e-9a60-15ebe5265179" />
 
+<img width="727" height="1021" alt="image" src="https://github.com/user-attachments/assets/1ab75f21-9203-420e-9a60-15ebe5265179" />
 
 #### QuestionGenerator
 Adding a direct DataFrame parameter for initializing QuestionGenerators let me run tests with a specially designed DataFrame fixture. By having duplicate values in both columns of ez_maths_df, I could ensure the QuestionGenerator could properly handle questions with multiple correct answers and vice versa.
@@ -103,6 +106,11 @@ Adding a direct DataFrame parameter for initializing QuestionGenerators let me r
 It also meant that gen_alt_options would always output the same "random" sample (as only 2 options were valid to select), letting me test against that.
 
 <img width="1174" height="453" alt="image" src="https://github.com/user-attachments/assets/d27b2692-605b-43ec-a7c1-75e3f9d6f88e" />
+
+#### User
+The tests for this class ensured its attributes were properly initialized and managed by its methods, whether values were provided or defaults were used.
+<img width="724" height="898" alt="image" src="https://github.com/user-attachments/assets/cf6167a9-cad9-4d45-bfc5-ee8f93c82799" />
+
 
 ## Evaluation
 ### Future plans
