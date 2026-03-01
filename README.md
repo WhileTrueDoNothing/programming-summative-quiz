@@ -51,19 +51,58 @@ However, most of these were designed for the command line, and needed to be brok
 ## Development
 ### quiz_utils module
 I began development with the quiz_utils module, as a lot of the code could be reconstructed from the quiz's command line version. I first constructed a basic class diagram to plan my classes and their functions, with plans to amend it during development, should I need to.
+
 <img width="796" height="518" alt="A draw.io diagram with details on the User, LeaderboardManager, Question and QuestionGenerator classes." src="https://github.com/user-attachments/assets/910f75be-7cdb-4e17-8a35-fda432d2c097" />
+
 #### Question
 I developed Question first. Classes like QuestionGenerator relied on it's existence, and the specifics of many other app elements depended on the way I decided to implement it.
+
 <img width="1294" height="653" alt="image" src="https://github.com/user-attachments/assets/8f45cb1f-6018-4869-838e-45c3a08ab90c" /><img width="1306" height="545" alt="image" src="https://github.com/user-attachments/assets/415ca9e6-da9a-4c2f-b597-cf7eb7aee785" /><img width="1481" height="254" alt="image" src="https://github.com/user-attachments/assets/d644ea67-a82a-4ebd-a01f-09b6e0d09621" />
+
 Alongside the question's text and correct answers, I decided to store the name of the column used for the answer. This allows the QuestionGenerator to generate incorrect multiple choice answers without needing to store them in the class itself. If I later utilize a selectbox widget with all potential answer options, it'll allow for easy retrieval of the correct column from the QuestionGenerator's DataFrame.
 
 I added allow_multiple_correct slightly later, upon realising the QuestionGenerator needed to know all potential answers to the given question, even if only one were to be displayed. If a single value was stored, other correct values could be selected as "incorrect" options. With allow_multiple_correct set to False, the Question will store all potential answers to avoid this, while only outputting the first answer if a single one is needed.
+
+#### QuestionGenerator
+This is the most complicated class in the backend, requiring many methods to manage its DataFrame and generate Questions.
+
+<img width="1385" height="1079" alt="image" src="https://github.com/user-attachments/assets/78bf4de5-1cd5-4dae-8cab-a31512261a92" /><img width="765" height="224" alt="image" src="https://github.com/user-attachments/assets/747007cb-8717-45b1-b022-09afe5d94019" />
+
+The get_colnames_from_text method extracts the column(s) to use for a question based on the placeholders in its format string. Without it, I'd have to store those values in another variable.
+
+<img width="1120" height="252" alt="image" src="https://github.com/user-attachments/assets/fdad91cd-6e6d-4315-a0f0-52673628b60c" />
+
+While I had planned to only initialize DataFrames from CSV files, I realised that allowing a DataFrame to be input directly would make testing easier. Breaking down the question generation functions into smaller, more specific methods also helped with this. The command line quiz generated all its questions in a single, overly-complicated function. QuestionGenerator instead contains a method to generate a Question from a specific row and a method to mark a specific row as used, which can both be easily tested. They can then both be called by another method that selects the random row and details they are to use.
+
+<img width="1110" height="358" alt="image" src="https://github.com/user-attachments/assets/a9065693-b528-4ecb-a48f-6d8655efee6b" /><img width="1588" height="823" alt="image" src="https://github.com/user-attachments/assets/c446765c-5828-4d5a-b131-79ee9151700a" /><img width="1591" height="814" alt="image" src="https://github.com/user-attachments/assets/fac88795-c7dc-4d33-a1cd-79514129bded" />
+
+The gen_alt_options method relies on the Question's allow_multiple_correct attribute to handle duplicates in the question or answer columns. When calculating the number of options it needs to generate, it'll only count the Question's "valid" answer(s). However, when selecting potential alternative options, it ignores *all* potential correct answers, regardless of allow_multiple_correct's value. This prevents it from selecting an "incorrect" option that's actually correct.
+
+<img width="1492" height="796" alt="image" src="https://github.com/user-attachments/assets/22367d89-5dbc-408f-93d0-91204924fcd7" />
+
+The reset_used_rows method resets the "row_used" value to False for all rows of the question data. This could potentially be called to continue the quiz if a user answers a question for every item in the dataset.
+
+<img width="930" height="120" alt="image" src="https://github.com/user-attachments/assets/410d6d8e-0042-4092-9038-bbf1d22dd141" />
+
+
 ### streamlit frontend
 
 ## Testing
 ### Unit Tests
 I used pytest to ensure my classes and functions worked as expected. I chose pytest over unittest due to it's easy Github integration and the lack of boilerplate code required when creating tests. I used a separate file for each class to keep my tests organized.
-####
+#### Question
+
+#### QuestionGenerator
+Adding a direct DataFrame parameter for initializing QuestionGenerators let me run tests with a specially designed DataFrame fixture. By having duplicate values in both columns of ez_maths_df, I could ensure the QuestionGenerator could properly handle questions with multiple correct answers and vice versa.
+
+<img width="1399" height="916" alt="image" src="https://github.com/user-attachments/assets/5cc5ab09-089a-4fce-82b2-8288e947058d" /><img width="1337" height="869" alt="image" src="https://github.com/user-attachments/assets/7b2f9e7c-16ba-4ace-a718-e4175e72aae6" />
+
+It also meant that gen_alt_options would always output the same "random" sample (as only 2 options were valid to select), letting me test against that.
+
+<img width="1174" height="453" alt="image" src="https://github.com/user-attachments/assets/d27b2692-605b-43ec-a7c1-75e3f9d6f88e" />
+
+
+#### QuestionGenerator
 
 ## Evaluation
 ### Future plans
