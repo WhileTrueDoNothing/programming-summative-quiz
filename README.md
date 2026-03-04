@@ -88,6 +88,16 @@ This class stores and manages details on the current user playing the quiz. My m
 
 <img width="1147" height="626" alt="image" src="https://github.com/user-attachments/assets/4537e3b9-cacf-49d7-aff9-cab63e302774" /><img width="698" height="229" alt="image" src="https://github.com/user-attachments/assets/29dbc0ae-4b39-4329-ae13-36511f6342ad" /><img width="1070" height="411" alt="image" src="https://github.com/user-attachments/assets/ec0d7fc1-bcef-4e0c-8b2a-824f77048a78" />
 
+#### LeaderboardManager
+This class loads and manages the leaderboard data, currently stored locally in a CSV file. I decided to limit the number of rows in the DataFrame to keep it to a reasonable size. I chose to make the leaderboard chart a Plotly figure for its interactivity and customizeability. I added an option for direct DataFrame input to the class alongside the CSV file, to make it easier to input data from external sources in the future.
+
+<img width="1054" height="612" alt="image" src="https://github.com/user-attachments/assets/5149a4fe-7175-44f1-a893-6ad3a2840870" /><img width="877" height="628" alt="image" src="https://github.com/user-attachments/assets/168ec499-99c4-405b-8bb1-5fbcbd0c33dd" /><img width="707" height="109" alt="image" src="https://github.com/user-attachments/assets/ac33eff5-4433-4ea6-8e01-a780985e096e" />
+
+When saving a new user's results, I've decided to always include them in the DataFrame so they can see themselves on the leaderboard at the end. I achieve this by removing the bottom row from the score data before adding the new row and sorting the DataFrame.
+
+<img width="872" height="264" alt="image" src="https://github.com/user-attachments/assets/244b5787-22cb-4678-afb2-56c6bf69c897" />
+
+
 ### streamlit frontend
 
 ## Testing
@@ -112,6 +122,11 @@ It also meant that gen_alt_options would always output the same "random" sample 
 The tests for this class ensured its attributes were properly initialized and managed by its methods, whether values were provided or defaults were used.
 
 <img width="724" height="898" alt="image" src="https://github.com/user-attachments/assets/cf6167a9-cad9-4d45-bfc5-ee8f93c82799" />
+
+#### LeaderboardManager
+For these tests, I used pytest's tmp_path functionality to create a dummy CSV file. This let me test the reading/writing functionality of the LeaderboardManager's methods without affecting the real leaderboard file.
+
+<img width="912" height="693" alt="image" src="https://github.com/user-attachments/assets/e0bf1cea-5436-4541-a95c-dcd87fc7ae53" />
 
 
 ## Evaluation
