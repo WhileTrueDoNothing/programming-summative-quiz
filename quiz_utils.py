@@ -7,6 +7,7 @@ from string import (
 import pandas as pd  # for importing and managing question data
 import numpy as np  # for condensing filter conditions
 import string  # for handling custom question strings
+import plotly.graph_objects as go
 
 
 class Question:
@@ -84,9 +85,12 @@ class QuestionGenerator:
                 string for the question text, with column names in {} where their value should be. Second value is 
                 the name of the column to get the answer from.
             q_data (pandas.DataFrame, optional*): A DataFrame to generate questions from. Defaults to None.
-                Must be supplied if q_data_source_path is None.
+                Must be provided if q_data_source_path is None.
             q_data_source_path (str, optional*): The path to a CSV file containing question data. Defaults to None.
-                Must be supplied if q_data is None.
+                Must be provided if q_data is None.
+        
+        Raises:
+            TypeError: If no question data is provided.
         """
 
         self.q_details = q_details
@@ -97,7 +101,7 @@ class QuestionGenerator:
             self.q_data = pd.read_csv(q_data_source_path, index_col=None)
         else:
             raise TypeError(
-                "No question data was provided. Please provide either a DataFrame or a filepath to a CSV file."
+                "No question data was provided. Please provide either a DataFrame or a path to a CSV file."
             )
 
         self.q_data["row_used"] = False
@@ -263,7 +267,90 @@ class User():
 
 
 class LeaderboardManager():
-    pass
+    """Manages the quiz's locally-stored leaderboard."""
+    source_path: str
+    board_size: int
+    score_data: pd.DataFrame
+    leader_chart: go.Figure
+
+    def __init__(self, source_path: str = None, leaderboard_data: pd.DataFrame = None, score_col: str = "score", board_size: int = 5):
+        """
+        Creates a new LeaderboardManager.
+
+        Args:
+            source_path(str, optional): The filepath to a CSV source for the leaderboard. Defaults to None.
+                Must be provided if leaderboard_data is None.
+            leaderboard_data(pandas.DataFrame, optional): A DataFrame to use for the leaderboard data. Defaults to None.
+                Must be provided if source_path is None.
+            score_col (str, optional): The name of the column storing scores. Defaults to score.
+            board_size (int, optional): The number of rows to include in the leaderboard. Defaults to 5.
+                
+        Raises:
+            TypeError: If no leaderboard data is provided.
+        """
+        if leaderboard_data is not None:
+            self.score_data = self.get_top_n(leaderboard_data, board_size, score_col=score_col)
+        elif source_path is not None:
+            self.source_path = source_path
+            self.score_data = self.get_top_n(self.get_data_from_source(score_col=score_col), board_size, score_col=score_col)
+        else:
+            raise TypeError("No data source provided. Please provide either a DataFrame or a path to a CSV file.")
+        self.leader_chart = self.create_leader_chart()
+        self.board_size = board_size
+
+    def get_score_data(self):
+        """Returns the LeaderboardManager's score_data DataFrame."""
+        return self.score_data
+
+    def get_leader_chart(self):
+        """Returns the LeaderboardManager's leader_chart Plotly figure."""
+        return self.leader_chart
+
+    def get_data_from_source(self, score_col: str = "score"):
+        """
+        Loads a DataFrame from the LeaderboardManager's source_path.
+        Raises a TypeError if called while the object's source_path attribute is None.
+        """
+        if not self.source_path:
+            raise TypeError("Cannot retrieve data as this LeaderboardManager has no source_path.")
+        return pd.read_csv(self.source_path)
+    
+    def get_top_n(self, data_to_filter: pd.DataFrame, n: int = 5, score_col: str = "score"):
+        "Returns the top n values in a given DataFrame, based off the given score_col."
+        return data_to_filter.sort_values(by=score_col, ascending=False, ignore_index=True).head(n)
+    
+    def create_leader_chart(self, user_col: str = "user", score_col: str = "score", bar_colour: str = "#006C7D"):
+        leaderboard_bar_chart = go.Bar(
+            y=self.score_data[user_col],
+            x=self.score_data[score_col],
+            text=self.score_data[score_col],
+            textposition="outside",
+            marker={"color":bar_colour},
+            orientation="h",
+            hoverinfo="x+y"
+        )
+        return go.Figure(leaderboard_bar_chart)
+
+    def save_row_to_source(self, row_to_add: pd.DataFrame):
+        """Saves the given row DataFrame to the LeaderboardManager's source."""
+        if self.source_path is None:
+            raise TypeError("Cannot save data as this LeaderboardManager has no source_path.")
+        row_to_add.to_csv(self.source_path, mode="a", index=False, header=False)
+
+    def save_result_and_update(self, user_to_add: User, user_col: str = "user", score_col: str = "score"):
+        """Updates leaderboards with the given User's results and saves them to the file if applicable."""
+
+        new_result_row = pd.DataFrame({user_col: [user_to_add.get_name()], score_col: [user_to_add.get_score()]})
+
+        if self.source_path is not None:
+            self.save_row_to_source(new_result_row)
+        
+        # replace the score at the bottom of the leaderboard with the user's name and score
+        self.score_data = self.score_data.iloc[:-1]
+        self.score_data = pd.concat([self.score_data, new_result_row])
+        self.score_data = self.score_data.sort_values(by=score_col, ascending=False, ignore_index=True)
+        self.leader_chart = self.create_leader_chart()
+
 
 class InputChecker():
     pass
