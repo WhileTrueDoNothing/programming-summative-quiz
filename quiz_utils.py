@@ -370,13 +370,16 @@ class StringInputChecker():
         self.format_regex = format_regex
 
     def presence_check(self, input_to_check: str):
+        """Performs a presence check against the given input."""
         return bool(input_to_check.strip())
 
     def length_check(self, input_to_check: str):
-        return len(input_to_check.strip()) <= self.max_len
+        """Checks the length of the given input against the StringInputChecker's max_len attribute."""
+        return len(input_to_check) <= self.max_len
 
     def format_check(self, input_to_check: str):
-        return bool(re.fullmatch(self.format_regex, input_to_check.strip()))
+        """Checks the format of the given input against the StringInputChecker's format_regex."""
+        return bool(re.fullmatch(self.format_regex, input_to_check))
 
 class MultiChoiceQuestion(Question):
     """A multiple choice question. Supports up to 26 options."""
