@@ -7,7 +7,8 @@ from string import (
 import pandas as pd  # for importing and managing question data
 import numpy as np  # for condensing filter conditions
 import string  # for handling custom question strings
-import plotly.graph_objects as go
+import plotly.graph_objects as go # for creating the leaderboard chart
+import re # for regex matching
 
 
 class Question:
@@ -352,8 +353,30 @@ class LeaderboardManager():
         self.leader_chart = self.create_leader_chart()
 
 
-class InputChecker():
-    pass
+class StringInputChecker():
+    """Can run various checks on string inputs."""
+    max_len: int
+    format_regex: str
+
+    def __init__(self, max_len: int, format_regex: str):
+        """
+        Creates a new StringInputChecker.
+        
+        Args:
+            max_len(int): The maximum length allowed for the input.
+            format_regex(str): A regular expression to check the string's format against.
+        """
+        self.max_len = max_len
+        self.format_regex = format_regex
+
+    def presence_check(self, input_to_check: str):
+        return bool(input_to_check.strip())
+
+    def length_check(self, input_to_check: str):
+        return len(input_to_check.strip()) <= self.max_len
+
+    def format_check(self, input_to_check: str):
+        return bool(re.fullmatch(self.format_regex, input_to_check.strip()))
 
 class MultiChoiceQuestion(Question):
     """A multiple choice question. Supports up to 26 options."""
