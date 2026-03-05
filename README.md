@@ -97,8 +97,13 @@ When saving a new user's results, I've decided to always include them in the Dat
 
 <img width="872" height="264" alt="image" src="https://github.com/user-attachments/assets/244b5787-22cb-4678-afb2-56c6bf69c897" />
 
+#### StringInputChecker
+This class validates text inputs with its methods. It'll allow me to keep input requirements consistent by only needing to declare them once per object. My only planned use for it is to validate the user's name input.
+
+<img width="1220" height="794" alt="image" src="https://github.com/user-attachments/assets/11708d8f-cb4a-4c47-9080-69f2386c98e3" />
 
 ### streamlit frontend
+I opted to use Streamlit for the frontend as I'm familiar with the library, and could eventually deploy this project on the community cloud.
 
 ## Testing
 ### Unit Tests
@@ -128,8 +133,14 @@ For these tests, I used pytest's tmp_path functionality to create a dummy CSV fi
 
 <img width="912" height="693" alt="image" src="https://github.com/user-attachments/assets/e0bf1cea-5436-4541-a95c-dcd87fc7ae53" />
 
+#### StringInputChecker
+I chose a complex regex to use for these tests. It ensures the first chracter is a capital letter, then subsequent characters aren't any of the special characters I listed. It'll still disallow names that start with an accented letter, but these are allowed for subsequent characters. I can allow a far more diverse range of inputs by specifying what to exclude instead of include.
+
+<img width="1279" height="690" alt="image" src="https://github.com/user-attachments/assets/e27a273b-c1a3-4db1-864f-a7951c959847" />
+
 
 ## Evaluation
 ### Future plans
 [insert some stuff about user testing]
 [add some stuff about a difficulty increase if I didn't add that]
+[improve the regex string to allow for people whose names start with accents n stuff]
