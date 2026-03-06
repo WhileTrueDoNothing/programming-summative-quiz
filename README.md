@@ -38,21 +38,22 @@ The application could:
 - Become more difficult once the user scores enough points by offering a selection menu of all options instead of just 4.
 - Become even more difficult for high scoring users by switching to just a free text input.
 ### Won't
-(This version of the application) Won't:
+(This version of) the application won't:
 - Utilize postcode district data for questions. That dataset is too large and complex to be worth implementing at this stage.
 - Differentiate between users with the same score by other metrics. Choosing and implementing an alternative metric takes time, and I have higher priority tasks.
 - Score users based on the time they take to answer (to deter them from googling it). The time it could take to implement the system and find ideal time limits outweighs the value it could bring.
 
 ## Initial plans
 Before creating the prototype, I drew some initial plans for the interface in my notebook.
-[INSERT PHOTOS OF THAT HERE]
+<img width="691" height="922" alt="Initial drawings of the quiz interface." src="https://github.com/user-attachments/assets/43e58ede-6182-4e5b-a3f7-75f73b92cef7" />
+
 
 ## Prototype
 I used figma to create a prototype of the user's journey through the quiz. It demonstrates viewing instructions on how to play, entering a user's name, answering a question and the quiz leaderboard updating with their final score. It can be accessed [here](https://www.figma.com/design/uioibs1bjv756tDAnCv9xo/postcode_quiz_ui_prototype?node-id=0-1&t=zjcT6pKWqf88Nzvt-1).
 <img width="1186" height="1077" alt="The Figma UI prototype for the quiz, showing the flow between different screens." src="https://github.com/user-attachments/assets/6b433fee-1b68-4114-8511-8fa7dbb06c68" />
 
 I chose teal, orange, black and white as the main interface colours as they're of contrasting hues and follow my company's design brand guidelines. I used [a palette checker](https://palettechecker.com/) to ensure they'd still contrast if a user was colourblind.
-<img width="1504" height="768" alt="A colour blindness simulation, showing the colour contrast for 3 common types of colour blindness." src="https://github.com/user-attachments/assets/5efce0bd-65af-471f-add7-6aaa5d0cb2b1" />
+<img width="902" height="461" alt="A colour blindness simulation, showing the colour contrast for 3 common types of colour blindness." src="https://github.com/user-attachments/assets/5efce0bd-65af-471f-add7-6aaa5d0cb2b1" />
 
 ### Libraries used
 
@@ -769,7 +770,10 @@ Testing of the streamlit interface was far more informal due to time constraints
 <img width="897" height="775" alt="The app displaying its end screen, with the user now on the leaderboard." src="https://github.com/user-attachments/assets/478d7c9c-1f5f-4f49-b8c7-7c7e25f9c8f2" />
 
 # Evaluation
-## Future plans
-[insert some stuff about user testing]
-[add some stuff about a difficulty increase if I didn't add that]
-[improve the regex string to allow for people whose names start with accents n stuff]
+This is an improvement on the previous version. Breaking down the classes and their methods made my code easier to both write and test. Running unit tests for all backend classes gave me confidence in my code and assisted in developing effective methods. Outlining requirement priorities helped direct my work and prevent scope creep.
+
+However, the planning phase took far too long. Many questions I answered then could've been better answered during development and testing. I also put too much time and effort into [prematurely optimizing](https://www.geeksforgeeks.org/software-engineering/premature-optimization/) my code. If this project was something critical that couldn't afford to fail, then my approach would be more justified. But for a simple quiz, a more iterative approach is more appropriate.
+
+If I continue this project, I'd like to deploy it to the [Streamlit Community Cloud](https://streamlit.io/cloud). For this, I'd set up external storage for my leaderboard with either [Google Sheets](https://docs.streamlit.io/develop/tutorials/databases/private-gsheet) or [Supabase.](https://docs.streamlit.io/develop/tutorials/databases/supabase)
+
+For future similar projects, I'd like to investigate alternative web development libraries for python. The things that make it easy to use for simple applications become a hiderance for more complex projects. While it requires more HTML, CSS and JavaScript knowledge, [Flask](https://flask.palletsprojects.com/en/stable/) gives you complete control over the webpage. [Shiny for python](https://shiny.posit.co/py/), a version of the popular R package, also looks promising. It provides more flexibility than streamlit, but appears less complex than Flask.
