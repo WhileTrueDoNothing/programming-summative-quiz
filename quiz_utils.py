@@ -377,9 +377,11 @@ class LeaderboardManager:
             textposition="outside",
             marker={"color": bar_colour},
             orientation="h",
-            hoverinfo="x+y",
+            hoverinfo="x+y"
         )
-        return go.Figure(leaderboard_bar_chart)
+
+        leaderboard_chart_layout = go.Layout(plot_bgcolor="#ffffff", paper_bgcolor="#ffffff")
+        return go.Figure(leaderboard_bar_chart, layout=leaderboard_chart_layout)
 
     def save_row_to_source(self, row_to_add: pd.DataFrame):
         """Saves the given row DataFrame to the LeaderboardManager's source."""
@@ -429,7 +431,10 @@ class StringInputChecker:
 
     def presence_check(self, input_to_check: str):
         """Performs a presence check against the given input."""
-        return bool(input_to_check.strip())
+        if input_to_check is None:
+            return False
+        else:
+            return bool(input_to_check.strip())
 
     def length_check(self, input_to_check: str):
         """Checks the length of the given input against the StringInputChecker's max_len attribute."""
