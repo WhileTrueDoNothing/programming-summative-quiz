@@ -2,6 +2,7 @@ import quiz_utils as q  # quiz helper classes
 import streamlit as st  # for the app interface
 from random import shuffle  # for shuffling the options list
 
+
 # procedures for updating session states
 def check_answer_and_update():
     """Checks the selected answer, updates the user's score/lives and the app's state accordingly."""
@@ -16,6 +17,7 @@ def check_answer_and_update():
         st.session_state.current_usr.lose_lives(1)
         st.session_state.app_state = "q_incorrect"
 
+
 def start_new_q():
     """
     Generates a new question and resets the data if all rows have been used.
@@ -28,26 +30,40 @@ def start_new_q():
     if st.session_state.current_usr.get_score() > 20:
         st.session_state["current_q_type"] = "text"
         try:
-            st.session_state.current_q = st.session_state.q_gen.gen_random_q(allow_multiple_correct = True)
+            st.session_state.current_q = st.session_state.q_gen.gen_random_q(
+                allow_multiple_correct=True
+            )
         except TypeError:
             st.session_state.q_gen.reset_used_rows()
-            st.session_state.current_q = st.session_state.q_gen.gen_random_q(allow_multiple_correct = True)
+            st.session_state.current_q = st.session_state.q_gen.gen_random_q(
+                allow_multiple_correct=True
+            )
         st.session_state.current_q_opts = None
     elif st.session_state.current_usr.get_score() > 10:
         st.session_state["current_q_type"] = "selectbox"
         try:
-            st.session_state.current_q = st.session_state.q_gen.gen_random_q(allow_multiple_correct = True)
+            st.session_state.current_q = st.session_state.q_gen.gen_random_q(
+                allow_multiple_correct=True
+            )
         except TypeError:
             st.session_state.q_gen.reset_used_rows()
-            st.session_state.current_q = st.session_state.q_gen.gen_random_q(allow_multiple_correct = True)
-        st.session_state.current_q_opts = st.session_state.q_gen.get_q_data()[st.session_state.current_q.get_a_col()].drop_duplicates()
+            st.session_state.current_q = st.session_state.q_gen.gen_random_q(
+                allow_multiple_correct=True
+            )
+        st.session_state.current_q_opts = st.session_state.q_gen.get_q_data()[
+            st.session_state.current_q.get_a_col()
+        ].drop_duplicates()
     else:
         st.session_state["current_q_type"] = "radio"
         try:
-            st.session_state.current_q = st.session_state.q_gen.gen_random_q(allow_multiple_correct = False)
+            st.session_state.current_q = st.session_state.q_gen.gen_random_q(
+                allow_multiple_correct=False
+            )
         except TypeError:
             st.session_state.q_gen.reset_used_rows()
-            st.session_state.current_q = st.session_state.q_gen.gen_random_q(allow_multiple_correct = False)
+            st.session_state.current_q = st.session_state.q_gen.gen_random_q(
+                allow_multiple_correct=False
+            )
         alt_q_opts = st.session_state.q_gen.gen_alt_options(
             st.session_state.current_q, total_q_optns=4
         )
@@ -55,12 +71,13 @@ def start_new_q():
             alt_q_opts + st.session_state.current_q.get_valid_answers()
         )
         shuffle(st.session_state.current_q_opts)
-    
+
     st.session_state.app_state = "q_ask"
+
 
 def check_name_start_quiz():
     """
-    Checks if the user has input a valid name. If it's valid, the quiz starts. 
+    Checks if the user has input a valid name. If it's valid, the quiz starts.
     If it isn't, the relevant error is displayed.
     """
     name_checker = st.session_state.name_checker
@@ -72,7 +89,7 @@ def check_name_start_quiz():
         st.error("That name is too long! Please use something shorter.")
     elif not name_checker.format_check(name_input):
         st.error(
-                "This name isn't in a valid format. Please ensure it starts with a capital letter and doesn't contain any special characters."
+            "This name isn't in a valid format. Please ensure it starts with a capital letter and doesn't contain any special characters."
         )
     else:
         st.session_state.current_usr = q.User(name=name_input, lives=3, score=0)
@@ -80,16 +97,20 @@ def check_name_start_quiz():
         st.session_state.q_num = 0
         start_new_q()
 
+
 def save_results_end_quiz():
     """
-        Saves the current user's results, clears the user's details, 
-        then changes the session state to the end page.
+    Saves the current user's results, clears the user's details,
+    then changes the session state to the end page.
     """
-    st.session_state.leaderboard_mgr.save_result_and_update(user_to_add=st.session_state.current_usr)
+    st.session_state.leaderboard_mgr.save_result_and_update(
+        user_to_add=st.session_state.current_usr
+    )
     st.session_state.prev_usr_name = st.session_state.current_usr.get_name()
     st.session_state.prev_usr_score = st.session_state.current_usr.get_score()
     st.session_state.current_usr = None
     st.session_state.app_state = "end_pg"
+
 
 # procedures for rendering widgets
 def render_name_form():
@@ -118,22 +139,22 @@ def render_name_form():
             value=prev_name,
             label_visibility="collapsed",
             placeholder="Enter your name...",
-            key="usr_name_input"
+            key="usr_name_input",
         )
         st.form_submit_button(label=btn_label, on_click=check_name_start_quiz)
-        
+
 
 def render_a_input():
     """Renders the answer input for the quiz, depending on the session state."""
     if st.session_state.current_q_type == "text":
         st.text_input(
-            label="Enter your answer:", 
+            label="Enter your answer:",
             label_visibility="collapsed",
             disabled=(st.session_state.app_state in ["q_correct", "q_incorrect"]),
             placeholder="Enter your answer...",
             on_change=check_answer_and_update,
-            key="selected_a"
-            )
+            key="selected_a",
+        )
     elif st.session_state.current_q_type == "selectbox":
         st.selectbox(
             label="Select an option:",
@@ -141,7 +162,7 @@ def render_a_input():
             accept_new_options=False,
             disabled=(st.session_state.app_state in ["q_correct", "q_incorrect"]),
             on_change=check_answer_and_update,
-            key="selected_a"
+            key="selected_a",
         )
     else:
         st.radio(
@@ -149,8 +170,9 @@ def render_a_input():
             options=st.session_state.current_q_opts,
             disabled=(st.session_state.app_state in ["q_correct", "q_incorrect"]),
             on_change=check_answer_and_update,
-            key="selected_a"
+            key="selected_a",
         )
+
 
 def render_result_msg():
     """Renders the result text based on the app's current state."""
@@ -158,19 +180,25 @@ def render_result_msg():
     if app_state == "q_correct":
         st.write("Correct! Well done!")
     elif app_state == "q_incorrect":
-        st.write("Incorrect! The answer was {}.".format(st.session_state.current_q.get_valid_answers()[0]))
+        st.write(
+            "Incorrect! The answer was {}.".format(
+                st.session_state.current_q.get_valid_answers()[0]
+            )
+        )
     else:
         return st.empty()
 
+
 def render_next_btn():
     """
-        Renders either the "Next Question" or "Finish Quiz" button,
-        depending on how many lives the current user has left.
+    Renders either the "Next Question" or "Finish Quiz" button,
+    depending on how many lives the current user has left.
     """
     if st.session_state.current_usr.get_lives() == 0:
         st.button(label="Finish Quiz", on_click=save_results_end_quiz())
     else:
         st.button(label="Next Question", on_click=start_new_q())
+
 
 st.set_page_config(page_title="UK Postcode Quiz", layout="wide", page_icon="🏘️")
 
@@ -219,7 +247,7 @@ st.markdown(
     }
     </style>
     """,
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
 
 if "q_gen" not in st.session_state:
@@ -236,8 +264,7 @@ if "q_gen" not in st.session_state:
 
 if "leaderboard_mgr" not in st.session_state:
     st.session_state["leaderboard_mgr"] = q.LeaderboardManager(
-        source_path="leaderboard.csv",
-        board_size=3
+        source_path="leaderboard.csv", board_size=3
     )
 
 if "name_checker" not in st.session_state:
@@ -304,5 +331,8 @@ with col2:
 with col3:
     if st.session_state.app_state in ["q_ask", "q_correct", "q_incorrect"]:
         st.write(
-            "Current Score: {}\n\nLives: {}".format(st.session_state.current_usr.get_score(),st.session_state.current_usr.get_lives())
+            "Current Score: {}\n\nLives: {}".format(
+                st.session_state.current_usr.get_score(),
+                st.session_state.current_usr.get_lives(),
+            )
         )

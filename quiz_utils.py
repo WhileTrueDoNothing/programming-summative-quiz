@@ -382,38 +382,24 @@ class LeaderboardManager:
             marker={"color": bar_colour},
             orientation="h",
             hoverinfo="x+y",
-            cliponaxis=False
+            cliponaxis=False,
         )
 
         leaderboard_chart_layout = go.Layout(
-            font=dict(
-                color=text_colour,
-                size=text_size
-            ),
+            font=dict(color=text_colour, size=text_size),
             plot_bgcolor="#ffffff",
             paper_bgcolor="#ffffff",
-            margin=dict(
-                l=10,
-                r=10,
-                t=2,
-                b=2,
-                pad=2
-            ),
+            margin=dict(l=10, r=10, t=2, b=2, pad=2),
             bargap=0.25,
             yaxis=dict(
                 tickmode="array",
                 tickvals=self.score_data.index,
                 ticktext=self.score_data[user_col],
                 autorange="reversed",
-                tickfont = dict(
-                    color=text_colour,
-                    size=text_size
-                ),
-                automargin=True
+                tickfont=dict(color=text_colour, size=text_size),
+                automargin=True,
             ),
-            xaxis=dict(
-                visible=False
-            )
+            xaxis=dict(visible=False),
         )
         return go.Figure(leaderboard_bar_chart, layout=leaderboard_chart_layout)
 
