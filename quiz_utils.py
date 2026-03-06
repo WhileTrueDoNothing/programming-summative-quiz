@@ -334,8 +334,8 @@ class LeaderboardManager:
             raise TypeError(
                 "No data source provided. Please provide either a DataFrame or a path to a CSV file."
             )
-        self.leader_chart = self.create_leader_chart()
         self.board_size = board_size
+        self.leader_chart = self.create_leader_chart()
 
     def get_score_data(self):
         """Returns the LeaderboardManager's score_data DataFrame."""
@@ -370,17 +370,51 @@ class LeaderboardManager:
         score_col: str = "score",
         bar_colour: str = "#006C7D",
     ):
+
+        text_size = 18
+        text_colour = "#000000"
+
         leaderboard_bar_chart = go.Bar(
-            y=self.score_data[user_col],
+            y=self.score_data.index,
             x=self.score_data[score_col],
             text=self.score_data[score_col],
             textposition="outside",
             marker={"color": bar_colour},
             orientation="h",
-            hoverinfo="x+y"
+            hoverinfo="x+y",
+            cliponaxis=False
         )
 
-        leaderboard_chart_layout = go.Layout(plot_bgcolor="#ffffff", paper_bgcolor="#ffffff")
+        leaderboard_chart_layout = go.Layout(
+            font=dict(
+                color=text_colour,
+                size=text_size
+            ),
+            plot_bgcolor="#ffffff",
+            paper_bgcolor="#ffffff",
+            margin=dict(
+                l=10,
+                r=10,
+                t=2,
+                b=2,
+                pad=2
+            ),
+            bargap=0.25,
+            yaxis=dict(
+                tickmode="array",
+                tickvals=self.score_data.index,
+                ticktext=self.score_data[user_col],
+                autorange="reversed",
+                tickfont = dict(
+                    color=text_colour,
+                    size=text_size
+                ),
+                automargin=True
+            ),
+            xaxis=dict(
+                visible=False
+            )
+        )
         return go.Figure(leaderboard_bar_chart, layout=leaderboard_chart_layout)
 
     def save_row_to_source(self, row_to_add: pd.DataFrame):
